@@ -1,0 +1,10 @@
+# sekrety i dane - nigdy w repo
+.env
+credentials.txt
+.admin_api_key
+pgdata/
+files/
+backups/
+# wtyczka zewnętrzna (RedmineUP, pobierana przez formularz)
+plugins/redmine_agile/
+.DS_Store
