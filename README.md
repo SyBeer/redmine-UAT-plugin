@@ -93,6 +93,25 @@ chmod 600 .admin_api_key
 python3 setup/test_uat.py
 ```
 
+## Wdrożenie na RPi (z repozytorium)
+
+Redmine na RPi bierze wtyczkę i skrypty **bezpośrednio z klonu tego repozytorium** — nie ma osobnej kopii.
+
+| Katalog na RPi | Co tam jest |
+|---|---|
+| `~/redmine-UAT-plugin/` | klon repozytorium (tylko odczyt, `git pull`) — wtyczka i `setup/` montowane stąd do kontenera |
+| `~/redmine/` | dane i sekrety: `.env` (z `UAT_REPO`), `pgdata/`, `files/`, `backups/`, `plugins/redmine_agile/` |
+
+Każda zmiana: **commit + push do Gitei → na RPi jedno polecenie:**
+
+```bash
+ssh raspi4@192.168.1.4 '~/redmine-UAT-plugin/update.sh'
+```
+
+`update.sh`: `git pull` → backup bazy → kopiuje zmieniony `docker-compose.yml` / `backup.sh` do `~/redmine` → restart Redmine → pokazuje wersję wtyczki → uruchamia `test_uat.py`.
+
+Wycofanie zmiany: `git revert` w repo, push, ponownie `update.sh` (albo `git checkout v0.5.0` w klonie na RPi + restart).
+
 ## Utrzymanie
 
 - Wtyczka modyfikuje model `Issue` i zapytanie tablicy Agile. **Po aktualizacji Redmine lub wtyczki Agile uruchom oba testy** — pokażą, co przestało działać.

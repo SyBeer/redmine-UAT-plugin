@@ -32,7 +32,9 @@ services:
     volumes:
       - ./files:/usr/src/redmine/files
       - ./plugins:/usr/src/redmine/plugins
-      - ./setup:/setup:ro
+      # wtyczka i skrypty prosto z repozytorium (UAT_REPO w .env; domyślnie ten katalog)
+      - ${UAT_REPO:-.}/plugins/uat_tests:/usr/src/redmine/plugins/uat_tests:ro
+      - ${UAT_REPO:-.}/setup:/setup:ro
     depends_on:
       db:
         condition: service_healthy
